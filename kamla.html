@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursed Forest | Shree Dev</title>
+
+  <!-- FONTS & ICONS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+  /* ---------- TOKENS ---------- */
+  :root{
+    --bg:#0f172a;      --surface:#1e293b;  --surface-alt:#162131;
+    --primary:#38bdf8; --primary-light:#7dd3fc;
+    --text:#f1f5f9;    --text-secondary:#94a3b8;
+    --shadow:rgba(0,0,0,.35);
+  }
+  [data-theme="light"]{
+    --bg:#f8fafc;--surface:#e2e8f0;--surface-alt:#e9eef6;
+    --text:#0f172a;--text-secondary:#475569;--shadow:rgba(0,0,0,.15);
+  }
+
+  /* ---------- GLOBAL ---------- */
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+  body{background:var(--bg);color:var(--text);line-height:1.6;scroll-behavior:smooth}
+  img{display:block;width:100%}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s,transform .7s}
+  .visible{opacity:1;transform:none}
+
+  /* ---------- HEADER ---------- */
+  header{background:var(--bg);padding:1rem}
+  header a{display:flex;align-items:center;gap:.5rem;color:var(--primary);font-weight:600}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:4.5rem 1rem 3.5rem;text-align:center}
+  .hero::before{content:'';position:absolute;inset:0;
+                background:radial-gradient(circle at 50% 0%,rgba(56,189,248,.28),transparent 70%);
+                pointer-events:none}
+  .hero h1{font-size:clamp(2.2rem,6vw,3rem);margin-bottom:.6rem}
+  .tags{display:flex;justify-content:center;gap:.6rem;margin:.8rem 0 1.2rem;font-size:.75rem;flex-wrap:wrap}
+  .tag{background:var(--surface);color:var(--primary);padding:.28rem .85rem;border-radius:20px;font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+
+  /* ---------- GALLERY ---------- */
+  .gallery-wrap{position:relative;margin-bottom:3.5rem}
+  .gallery{display:flex;gap:1rem;padding:0 1rem;overflow-x:auto !important;overflow-y:hidden;
+           touch-action:pan-x pinch-zoom;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+  .gallery img{flex:0 0 85%;border-radius:10px;box-shadow:0 3px 8px var(--shadow);
+               scroll-snap-align:center;transition:transform .4s;object-fit:cover;margin:0 auto}
+  .gallery img:hover{transform:scale(1.04)}
+  .gallery::-webkit-scrollbar{display:none}
+  @media(min-width:600px){
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+             overflow-x:unset;scroll-snap-type:none}
+    .gallery img{flex:none}
+  }
+  /* arrows (mobile only) */
+  .gallery-nav{position:absolute;inset:0;pointer-events:none}
+  .gallery-nav button{
+    pointer-events:auto;position:absolute;top:50%;transform:translateY(-50%);
+    width:42px;height:42px;border:none;border-radius:50%;
+    background:rgba(0,0,0,.45);backdrop-filter:blur(2px);
+    color:var(--text);font-size:1.4rem;cursor:pointer;box-shadow:0 2px 6px var(--shadow)
+  }
+  #prev{left:8px} #next{right:8px}
+  @media(min-width:600px){.gallery-nav{display:none}}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:3rem 1rem}
+  .alt{background:var(--surface-alt)}
+  section h2{text-align:center;color:var(--primary);margin-bottom:1rem;font-size:1.4rem}
+
+  /* bullet list */
+  .features{max-width:680px;margin:0 auto;list-style-position:inside}
+  .features li{margin-bottom:.45rem;color:var(--text-secondary)}
+
+  /* two‑column flex wrapper */
+  .flex-section{
+    max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:3rem
+  }
+  @media(min-width:768px){
+    .flex-section{flex-direction:row;justify-content:space-between}
+    .flex-section>div{width:48%;display:flex;flex-direction:column;align-items:center}
+  }
+
+  /* patch timeline */
+  .timeline{border-left:3px solid var(--primary);padding-left:1rem}
+  .t-item{position:relative;margin-bottom:1.3rem}
+  .t-item::before{content:'';position:absolute;left:-.66rem;top:.45rem;width:.8rem;height:.8rem;background:var(--primary);border-radius:50%}
+  .t-item h4{font-size:.95rem;margin-bottom:.25rem}
+  .t-item span{font-size:.8rem;color:var(--text-secondary)}
+
+  /* 16:9 iframe */
+  .video-wrapper{position:relative;max-width:900px;margin:0 auto}
+  .video-wrapper::before{content:'';display:block;padding-top:56.25%}
+  .video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;
+                        border:none;border-radius:12px;box-shadow:0 3px 10px var(--shadow)}
+
+  /* share buttons */
+  .share{display:flex;justify-content:center;gap:1rem;margin-top:2rem}
+  .share button{background:var(--surface);border:none;border-radius:8px;padding:.65rem 1rem;
+                color:var(--primary);font-size:.95rem;cursor:pointer;box-shadow:0 2px 6px var(--shadow);
+                display:flex;align-items:center;gap:.4rem}
+  .share button:hover{background:var(--primary-light);color:var(--bg)}
+
+  /* download */
+  .center{display:flex;justify-content:center;margin-top:2.5rem}
+  .btn{background:var(--primary);color:var(--bg);padding:1rem 2.4rem;border:none;border-radius:10px;
+       font-weight:700;letter-spacing:.4px;cursor:pointer;transition:.25s;box-shadow:0 4px 10px var(--shadow)}
+  .btn:hover{background:var(--primary-light);transform:translateY(-3px);box-shadow:0 6px 14px var(--shadow)}
+
+  /* footer & top‑btn */
+  footer{text-align:center;background:var(--surface);padding:1.4rem 0;font-size:.8rem;color:var(--text-secondary)}
+  #topBtn{position:fixed;right:16px;bottom:26px;width:44px;height:44px;border:none;border-radius:50%;
+          background:var(--primary);color:var(--bg);font-size:1.4rem;cursor:pointer;
+          box-shadow:0 3px 10px var(--shadow);display:none;z-index:999}
+  #topBtn:hover{background:var(--primary-light)}
+
+  /* same background as page for the two side‑by‑side columns */
+.alt-reveal{
+  background:var(--bg);
+  padding:1.6rem 1.4rem;
+  border-radius:12px;          /* optional – keeps soft corners */
+  box-shadow:none;             /* remove colored card shadow   */
+}
+
+  </style>
+</head>
+<body>
+
+<header><a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to Portfolio</a></header>
+
+<!-- HERO -->
+<section class="hero reveal">
+  <h1>Kamla</h1>
+  <div class="tags"><span class="tag">PC</span><span class="tag">Horror</span><span class="tag">UE5</span></div>
+  <p style="max-width:680px;margin:0 auto;color:var(--text-secondary)">
+    Kamla is a stealth-based horror game rooted in Indian folklore, featuring supernatural threats, inventory puzzles, and eerie exploration.
+  </p>
+</section>
+
+<!-- GALLERY -->
+<div class="gallery-wrap reveal">
+  <div class="gallery">
+    <img src="a (1).png" alt="Boss fight">
+    <img src="a (2).png" alt="Village">
+    <img src="a (3).png" alt="Puzzle area">
+    <img src="a (4).png" alt="Cut‑scene">
+  </div>
+  <div class="gallery-nav"><button id="prev">&#10094;</button><button id="next">&#10095;</button></div>
+</div>
+
+<!-- FEATURES + SYSTEM REQUIREMENTS -->
+<section class="alt-reveal" style="padding-top:0;">
+  <div class="flex-section">
+    <div>
+      <h2>Key Features</h2>
+      <ul class="features">
+        <li>Stealth-based horror set in an abandoned Indian village.</li>
+        <li> Inventory puzzles and item collection to progress.</li>
+        <li>Dark atmosphere with flickering lights and eerie sounds.</li>
+        <li>Inspired by urban legends and regional folklore.</li>
+        <li>Controller & keyboard support</li>
+      </ul>
+    </div>
+    <div>
+      <h2>System Requirements</h2>
+      <ul class="features">
+        <li><strong>OS:</strong> Windows 10 (64‑bit)</li>
+        <li><strong>CPU:</strong> Intel i5 / Ryzen 5</li>
+        <li><strong>RAM:</strong> 8 GB (min )</li>
+        <li><strong>GPU:</strong> GTX 1060 / RX 580</li>
+        <li><strong>Storage:</strong> 4 GB free</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- GAME INFO + PATCH NOTES -->
+<section class="reveal">
+  <div class="flex-section">
+    <div>
+      <h2>Game Info</h2>
+      <ul class="features">
+        <li><strong>Genre:</strong> Horror · Puzzle · Exploration</li>
+        <li><strong>Engine:</strong> Unreal Engine 5</li>
+        <li><strong>Platform:</strong> PC</li>
+        <li><strong>Playtime:</strong> 1–2 hours</li>
+        <li><strong>Release:</strong> July 2025</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Patch Notes</h2>
+      <div class="timeline">
+        <div class="t-item"><h4>v1.2 “Spirit’s Wrath”</h4><span>Jun 2025 · New boss phase, HDR lighting pass.</span></div>
+        <div class="t-item"><h4>v1.1 “Forest Echoes”</h4><span>Apr 2025 · Performance boost, village puzzles.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAILER -->
+<section class="reveal">
+  <h2>Trailer</h2>
+  <div class="video-wrapper">
+    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Cursed Forest Trailer" allowfullscreen></iframe>
+  </div>
+</section>
+
+<!-- SHARE BAR -->
+<div class="share reveal">
+  <button id="copy"><i class="fa-solid fa-link"></i>Copy Link</button>
+  <button onclick="window.open('https://twitter.com/intent/tweet?url='+encodeURIComponent(location.href),'_blank')"><i class="fab fa-x-twitter"></i>Tweet</button>
+  <button onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(location.href),'_blank')"><i class="fab fa-linkedin-in"></i>Share</button>
+</div>
+
+<!-- DOWNLOAD -->
+<div class="center reveal">
+  <a class="btn" href="/downloads/CursedForest_Win64.zip">Download Build</a>
+</div>
+
+<footer>© <span id="year"></span> Shree Dev</footer>
+<button id="topBtn" aria-label="Back to top"><i class="fa-solid fa-chevron-up"></i></button>
+
+<script>
+/* dynamic year */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* reveal on scroll */
+const els=document.querySelectorAll('.reveal');
+const reveal=()=>{const trig=window.innerHeight-120;els.forEach(el=>{if(el.getBoundingClientRect().top<trig)el.classList.add('visible');});};
+window.addEventListener('scroll',reveal);reveal();
+
+/* gallery arrows */
+const gal=document.querySelector('.gallery');
+document.getElementById('prev').onclick=()=>gal.scrollBy({left:-window.innerWidth*0.7,behavior:'smooth'});
+document.getElementById('next').onclick=()=>gal.scrollBy({left: window.innerWidth*0.7,behavior:'smooth'});
+
+/* copy link */
+document.getElementById('copy').onclick=async()=>{
+  try{await navigator.clipboard.writeText(location.href);alert('Link copied!');}
+  catch{alert('Copy failed');}
+};
+
+/* back‑to‑top */
+const topBtn=document.getElementById('topBtn');
+window.addEventListener('scroll',()=>topBtn.style.display=window.scrollY>300?'block':'none');
+topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>
